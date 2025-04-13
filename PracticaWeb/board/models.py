@@ -23,7 +23,6 @@ class Post(models.Model):
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE, null=True, blank=True)
     is_op = models.BooleanField(default=False)
     name = models.CharField(max_length=50, blank=True)
-    email = models.CharField(max_length=50, blank=True)
     subject = models.CharField(max_length=100, blank=True)
     message = models.TextField()
     image = models.ImageField(upload_to='post_images/', blank=True, null=True)
