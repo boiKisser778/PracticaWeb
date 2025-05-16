@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Thread in {{ board.name }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'board/css/style.css' %}">
+</head>
+<body>
+    <h1>Create New Thread in /{{ board.code }}/</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create Thread</button>
+    </form>
+</body>
+</html>

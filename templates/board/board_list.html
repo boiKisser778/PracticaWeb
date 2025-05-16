@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'board/css/style.css' %}">
+    <title>Imageboard</title>
+</head>
+<body>
+    <h1>Boards</h1>
+    <ul>
+        {% for board in boards %}
+        <li><a href="{% url 'board_view' board.code %}">{{ board }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
