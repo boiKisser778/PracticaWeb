@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ board.name }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'board/css/style.css' %}">
+</head>
+<body>
+    <h1>{{ board.name }}</h1>
+    <p>{{ board.description }}</p>
+
+    <a href="{% url 'create_thread' board.code %}">Create New Thread</a>
+
+    <hr>
+
+    {% for thread in threads %}
+    <div>
+        <h3>
+            {% if thread.is_pinned %}[Pinned]{% endif %}
+            <a href="{% url 'thread_view' board.code thread.id %}">
+                {{ thread.subject }}
+            </a>
+        </h3>
+        <p>Created: {{ thread.created_at }}</p>
+    </div>
+    <hr>
+    {% endfor %}
+</body>
+</html>
