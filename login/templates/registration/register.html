@@ -1,13 +1,138 @@
 <!DOCTYPE html>
-<html>
-<head><title>Register</title></head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - eurchan</title>
+    <meta name="description" content="Create your eurchan forum account to join the community">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .register-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        label {
+            display: block;
+            text-align: left;
+            margin: 10px 0 5px;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: #dc3545;
+            margin-bottom: 15px;
+        }
+        .login-link {
+            display: block;
+            margin-top: 15px;
+            color: #4a90e2;
+            text-decoration: none;
+        }
+        .login-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "eurchan",
+      "url": "https://eurchan.com",
+      "applicationCategory": "SocialNetworking",
+      "operatingSystem": "WebBrowser",
+      "offers": {
+        "@type": "Offer",
+        "category": "OnlineCommunity",
+        "description": "Free online discussion forum"
+      },
+      "potentialAction": {
+        "@type": "RegisterAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://eurchan.com/register",
+          "actionPlatform": [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform"
+          ]
+        }
+      }
+    }
+    </script>
+</head>
 <body>
-    <h2>Register</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Sign Up</button>
-    </form>
-    <a href="{% url 'login' %}">Already have an account?</a>
+    <div class="register-box" vocab="https://schema.org/" typeof="WebApplication">
+        <span property="applicationCategory" content="SocialNetworking" style="display: none;"></span>
+        <span property="operatingSystem" content="WebBrowser" style="display: none;"></span>
+        <h2>Join <span property="name">eurchan</span></h2>
+
+        {% if form.errors %}
+            <div class="error">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div rel="potentialAction">
+            <form method="post" typeof="RegisterAction">
+                {% csrf_token %}
+                {% for field in form %}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <input type="{{ field.field.widget.input_type }}" 
+                           name="{{ field.html_name }}" 
+                           id="{{ field.id_for_label }}" 
+                           {% if field.field.required %}required{% endif %}>
+                {% endfor %}
+
+                <button type="submit">Create Account</button>
+            </form>
+        </div>
+        
+        <div style="text-align: center; margin-top: 15px;">
+            <p>Already have an account?</p>
+            <a href="{% url 'login' %}" class="login-link">
+                Log In
+            </a>
+        </div>
+    </div>
 </body>
 </html>

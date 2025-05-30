@@ -24,7 +24,7 @@ class Post(models.Model):
     is_op = models.BooleanField(default=False)
     name = models.CharField(max_length=50, blank=True)
     subject = models.CharField(max_length=100, blank=True)
-    message = models.TextField()
+    message = models.TextField(max_length=256)
     image = models.ImageField(upload_to='post_images/', blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
 

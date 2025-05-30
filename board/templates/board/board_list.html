@@ -1,16 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" vocab="https://schema.org/">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title property="name">Imageboard - Boards</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'board/css/style.css' %}">
-    <title>Imageboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    <h1>Boards</h1>
-    <ul>
-        {% for board in boards %}
-        <li><a href="{% url 'board_view' board.code %}">{{ board }}</a></li>
-        {% endfor %}
-    </ul>
+<body typeof="WebApplication">
+    <span property="applicationCategory" content="SocialNetworking" style="display: none;"></span>
+    <span property="operatingSystem" content="WebBrowser" style="display: none;"></span>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-image"></i> <span property="name">Imageboard</span></h1>
+        </header>
+
+        <main class="board-list" rel="mainEntity">
+            <div class="board-grid" typeof="ItemList">
+                <span property="numberOfItems" content="{{ boards|length }}" style="display: none;"></span>
+                {% for board in boards %}
+                <a href="{% url 'board_view' board.code %}" class="board-card" rel="itemListElement">
+                    <div class="board-card-inner" typeof="ListItem">
+                        <span property="position" content="{{ forloop.counter }}" style="display: none;"></span>
+                        <h2>/{{ board.code }}/</h2>
+                        <p>{{ board.name }}</p>
+                        <small>{{ board.description }}</small>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>© 2025 Imageboard</p>
+        </footer>
+    </div>
 </body>
 </html>

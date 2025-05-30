@@ -1,29 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" vocab="https://schema.org/">
 <head>
-    <title>{{ board.name }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ board.name }} - /{{ board.code }}/</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'board/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <h1>{{ board.name }}</h1>
-    <p>{{ board.description }}</p>
+    <div class="container">
+        <header class="header">
+            <h1 property="name">/{{ board.code }}/ - <span property="alternateName">{{ board.name }}</span></h1>
+            <p class="board-description" property="description">{{ board.description }}</p>
+            <meta property="dateCreated" content="{{ board.created_at|date:'c' }}">
+            <nav class="breadcrumb">
+                <a href="{% url 'board_list' %}">Boards</a> &raquo; /{{ board.code }}/
+            </nav>
+        </header>
 
-    <a href="{% url 'create_thread' board.code %}">Create New Thread</a>
-
-    <hr>
-
-    {% for thread in threads %}
-    <div>
-        <h3>
-            {% if thread.is_pinned %}[Pinned]{% endif %}
-            <a href="{% url 'thread_view' board.code thread.id %}">
-                {{ thread.subject }}
+        <div class="actions">
+            <a href="{% url 'create_thread' board.code %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> New Thread
             </a>
-        </h3>
-        <p>Created: {{ thread.created_at }}</p>
+        </div>
+
+        <main class="thread-list">
+            {% for thread in threads %}
+            <article class="thread-card {% if thread.is_pinned %}pinned{% endif %}" typeof="Article">
+                <meta property="datePublished" content="{{ thread.created_at|date:'c' }}">
+                <link property="url" href="{{ request.scheme }}://{{ request.get_host }}{% url 'thread_view' board.code thread.id %}">
+                
+                {% if thread.is_pinned %}
+                <span class="pinned-badge">
+                    <i class="fas fa-thumbtack"></i> Pinned
+                </span>
+                {% endif %}
+                
+                {% with thread.post_set.first as op_post %}
+                {% if op_post.image %}
+                <div class="thread-image" property="image" typeof="ImageObject">
+                    <a href="{% url 'thread_view' board.code thread.id %}" property="url">
+                        <img src="{{ op_post.image.url }}" property="contentUrl" alt="Thread image">
+                    </a>
+                </div>
+                {% endif %}
+                
+                <div class="thread-content" property="articleBody">
+                    <h3 property="headline">
+                        <a href="{% url 'thread_view' board.code thread.id %}" property="url">
+                            {{ thread.subject }}
+                        </a>
+                    </h3>
+                    <div class="thread-meta" property="author" typeof="Person">
+                        <meta property="name" content="{{ op_post.name|default:'Anonymous' }}">
+                        <span><i class="far fa-clock"></i> {{ thread.created_at|timesince }} ago</span>
+                        <span><i class="far fa-comment"></i> {{ thread.post_set.count }} posts</span>
+                    </div>
+                    <div class="thread-preview" property="text">
+                        {{ op_post.message|truncatewords:30 }}
+                    </div>
+                </div>
+                {% endwith %}
+            </article>
+            {% endfor %}
+        </main>
     </div>
-    <hr>
-    {% endfor %}
 </body>
 </html>

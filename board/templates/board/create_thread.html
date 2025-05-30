@@ -1,17 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" vocab="https://schema.org/">
 <head>
-    <title>Create Thread in {{ board.name }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title property="name">Create Thread - /{{ board.code }}/</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'board/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <h1>Create New Thread in /{{ board.code }}/</h1>
+    <div class="container">
+        <header class="header">
+            <h1 property="headline">Create New Thread in /{{ board.code }}/</h1>
+            <nav class="breadcrumb">
+                <a href="{% url 'board_list' %}">Boards</a> &raquo; 
+                <a href="{% url 'board_view' board.code %}">/{{ board.code }}/</a> &raquo; 
+                New Thread
+            </nav>
+        </header>
 
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Create Thread</button>
-    </form>
+        <main class="form-container" typeof="Article">
+            <meta property="datePublished" content="{% now 'Y-m-d\TH:i:s' %}">
+            <meta property="dateModified" content="{% now 'Y-m-d\TH:i:s' %}">
+            
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div property="articleBody">
+                    <div class="form-group">
+                        <label for="{{ form.subject.id_for_label }}">Subject</label>
+                        <input type="text" id="{{ form.subject.id_for_label }}" name="subject">
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.message.id_for_label }}">Message</label>
+                        <textarea id="{{ form.message.id_for_label }}" name="message"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.image.id_for_label }}">Image</label>
+                        <input type="file" id="{{ form.image.id_for_label }}" name="image">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Create Thread
+                    </button>
+                    <a href="{% url 'board_view' board.code %}" class="btn btn-secondary">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+            
+            <div property="author" typeof="Person" style="display: none;">
+                <span property="name">{{ user.username|default:"Anonymous" }}</span>
+            </div>
+        </main>
+    </div>
 </body>
 </html>

@@ -10,11 +10,15 @@ def board_list(request):
     boards = Board.objects.all()
     return render(request, 'board/board_list.html', {'boards': boards})
 
-@login_required
 def board_view(request, board_code):
     board = get_object_or_404(Board, code=board_code)
-    threads = Thread.objects.filter(board=board).order_by('-is_pinned', '-created_at')
-    return render(request, 'board/board_view.html', {'board': board, 'threads': threads})
+    threads = Thread.objects.filter(board=board)\
+                           .order_by('-is_pinned', '-created_at')\
+                           .prefetch_related('post_set')
+    return render(request, 'board/board_view.html', {
+        'board': board,
+        'threads': threads
+    })
 
 @login_required
 def thread_view(request, board_code, thread_id):

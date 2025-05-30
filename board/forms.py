@@ -8,6 +8,7 @@ class PostForm(forms.ModelForm):
         widgets = {
             'message': forms.Textarea(attrs={'rows': 5}),
         }
+        
 class PostReply(forms.ModelForm):
     class Meta:
         model = Post
@@ -15,3 +16,5 @@ class PostReply(forms.ModelForm):
         widgets = {
             'message': forms.Textarea(attrs={'rows': 5}),
         }
+        
+  
